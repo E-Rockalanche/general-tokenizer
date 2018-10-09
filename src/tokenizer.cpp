@@ -16,12 +16,11 @@ const char* Tokenizer::SQ_STRING_RULE = "'((\\\\.)|[^\"\\\\])*'";
 const char* Tokenizer::CHARACTER_RULE = "'(\\\\.)|[^'\\\\]'";
 const char* Tokenizer::MALFORMED_CHARACTER_RULE = "'(\\\\.)|[^'\\\\]((\\\\.)|[^'\\\\])+'";
 
-void Tokenizer::addRule(std::string rule, int token_type) {
+void Tokenizer::addRule(std::string rule, int token_type, bool ignore) {
 	state_machine.addRule(rule, token_type);
-}
-
-void Tokenizer::ignoreType(int token_type) {
-	ignore_types.push_back(token_type);
+	if (ignore) {
+		ignore_types.push_back(token_type);
+	}
 }
 
 bool Tokenizer::tokenize(std::istream* stream, std::vector<Token>* token_list) {

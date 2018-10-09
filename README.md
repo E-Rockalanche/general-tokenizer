@@ -2,10 +2,9 @@
 
 ## Tokenizer
 
-### void Tokenizer::addRule(std::string rule, int token_type)
+### void Tokenizer::addRule(std::string rule, int token_type, bool ignore = false)
 
-Encodes a series of state changes in the underlying finite state machine. If a parsed token matches the given rule the resulting token will be of the given type. Negative types are considered invalid tokens. The function will throw if the finite state machine tries to override existing state changes or types.
-Rule is expected to be a regular expression with implied beginning and end anchors
+Encodes a series of state changes in the underlying finite state machine. If a parsed token matches the given rule the resulting token will be of the given type. Negative types are considered invalid tokens. The function will throw if the finite state machine tries to override existing state changes or types. Rule is expected to be a regular expression with implied beginning and end anchors. It is not a true regular expression (since I parse it and make the finite state machine from it). More complicated regular expressions will case the underlying state machine to throw an exception (like ".\*a") If ignore is true then any token of the given type will not be added to the token vector. It is important to note that the tokenizer does NOT ignore whitespace by default.
 
 example:
 ```cpp
@@ -14,15 +13,19 @@ enum TokenType {
 	HEX,
 	DECIMAL,
 	OCTAL,
+	WHITESPACE,
+	COMMENT,
 	IF
 };
-addRule("[\\l\\u_][\\w]*", WORD);
-addRule("$|(0x)[\\h]+", HEX);
-addRule("-?[1-9][\\d]*", DECIMAL);
-addRule("0[0-7]*, OCTAL");
+tokenizer.addRule("[\\l\\u_][\\w]*", WORD);
+tokenizer.addRule("$|(0x)[\\h]+", HEX);
+tokenizer.addRule("-?[1-9][\\d]*", DECIMAL);
+tokenizer.addRule("0[0-7]*, OCTAL");
+tokenizer.addRule("\\s+", WHITESPACE, true);
+tokenizer.addRule("//[^\n]*\n?", COMMENT, true);
 
 // this call will throw an exception because it conflicts with the rule WORD
-addRule("if", IF)
+tokenizer.addRule("if", IF)
 ```
 
 Many common regular expressions are already defined
@@ -42,18 +45,6 @@ const char* Tokenizer::DQ_STRING_RULE = "\"((\\\\.)|[^\"\\\\])*\"";
 const char* Tokenizer::SQ_STRING_RULE = "'((\\\\.)|[^\"\\\\])*'";
 const char* Tokenizer::CHARACTER_RULE = "'(\\\\.)|[^'\\\\]'";
 const char* Tokenizer::MALFORMED_CHARACTER_RULE = "'(\\\\.)|[^'\\\\]((\\\\.)|[^'\\\\])+'";
-```
-
-### void Tokenizer::ignoreType(int token_type)
-
-Sets the given type to be excluded from the token list (std::vector). Usefull for ignoring comments and whitespace
-
-example:
-```cpp
-enum TokenType {
-	COMMENT
-};
-ignoreRule(COMMENT);
 ```
 
 ### bool Tokenizer::tokenize(std::istream* stream, std::vector<Token>* token_list)

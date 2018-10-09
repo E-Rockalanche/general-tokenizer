@@ -25,8 +25,7 @@ typedef unsigned int uint;
 
 class Tokenizer {
 public:
-	void addRule(std::string rule, int token_type);
-	void ignoreType(int token_type);
+	void addRule(std::string rule, int token_type, bool ignore = false);
 	bool tokenize(std::istream* stream, std::vector<Token>* token_list);
 	bool tokenize(const std::string& str, std::vector<Token>* token_list);
 	unsigned int errors(){ return num_errors; }
