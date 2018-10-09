@@ -158,11 +158,9 @@ int main() {
 }
 
 void setup(Tokenizer& tokenizer) {
-	tokenizer.addRule(Tokenizer::WHITESPACE, TokenType::WHITESPACE);
-	tokenizer.ignoreType(TokenType::WHITESPACE);
+	tokenizer.addRule(Tokenizer::WHITESPACE, TokenType::WHITESPACE, true);
 
-	tokenizer.addRule(";[^\n]*\n?", TokenType::COMMENT);
-	tokenizer.ignoreType(TokenType::COMMENT);
+	tokenizer.addRule(";[^\n]*\n?", TokenType::COMMENT, true);
 
 	tokenizer.addRule(Tokenizer::WORD_RULE, TokenType::WORD);
 	tokenizer.addRule("\\.[\\w]+", TokenType::DIRECTIVE);
