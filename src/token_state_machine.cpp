@@ -297,13 +297,13 @@ States TokenStateMachine::compileRegexGroup(States start_states, std::string str
 			}
 			end_states = compileRegexBracketExpression(start_states, char_group);
 		} else {
-			bool special_char = false;
+			bool is_char_class = false;
 			std::string char_class;
 
 			if (c == '\\') {
 				machineAssert(str.size() == 2, "no character after escape");
 				c = str[1];
-				special_char = true;
+				is_char_class = true;
 				switch(c) {
 					case 'd': char_class = DIGITS; break;
 					case 'w': char_class = WORD; break;
@@ -313,12 +313,12 @@ States TokenStateMachine::compileRegexGroup(States start_states, std::string str
 					case 'h': char_class = HEXDIGITS; break;
 
 					default:
-						special_char = false;
+						is_char_class = false;
 						c = getEscapedCharacter(c);
 				}
 			}
 
-			if (special_char) {
+			if (is_char_class) {
 				machineAssert(char_class.size(), "character class is empty");
 				end_states = compileRegexBracketExpression(start_states, char_class);
 			} else {
@@ -377,10 +377,10 @@ States TokenStateMachine::compileRegexBracketExpression(States start_states, std
 		if (c == '\\' && !escaped) {
 			escaped = true;
 		} else {
-			bool special_char = false;
+			bool is_char_class = false;
 			std::string char_class;
 			if (escaped) {
-				special_char = true;
+				is_char_class = true;
 				switch(c) {
 					case 'd': char_class = DIGITS; break;
 					case 'w': char_class = WORD; break;
@@ -390,13 +390,13 @@ States TokenStateMachine::compileRegexBracketExpression(States start_states, std
 					case 'h': char_class = HEXDIGITS; break;
 
 					default:
-						special_char = false;
+						is_char_class = false;
 						c = getEscapedCharacter(c);
 				}
 				escaped = false;
 			}
 
-			if (special_char) {
+			if (is_char_class) {
 				machineAssert(char_class.size(), "character class is empty");
 				for(uint i = 0; i < char_class.size(); i++) {
 					char_group += char_class[i];
