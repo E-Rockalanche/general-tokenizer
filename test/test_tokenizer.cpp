@@ -132,9 +132,17 @@ int main() {
 				"=", TokenType::EQUALS, 0);
 		});
 
-		it("should parse comment", {
+		it("should ignore comment", {
 			std::vector<Token> token_list;
 			std::string str = "; this is a comment until new line or eof";
+			tokenizer.tokenize(str, &token_list);
+			expect(tokenizer.errors(), 0);
+			expect(token_list.size(), 0);
+		});
+
+		it("should ignore whitespace", {
+			std::vector<Token> token_list;
+			std::string str = " \t\n\r\f\v";
 			tokenizer.tokenize(str, &token_list);
 			expect(tokenizer.errors(), 0);
 			expect(token_list.size(), 0);
