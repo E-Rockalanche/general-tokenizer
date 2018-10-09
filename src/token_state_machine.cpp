@@ -37,12 +37,6 @@ TokenStateMachine::TokenStateMachine() {
 	state_types.resize(2, -1);
 }
 
-TokenStateMachine::TokenStateMachine(uint num_expressions, const std::string* expressions) : TokenStateMachine() {
-	for(uint i = 0; i < num_expressions; i++) {
-		addRule(expressions[i], i);
-	}
-}
-
 TokenStateMachine::TokenStateMachine(uint rows, const std::map<char, uint>* state_changes, const int* types) {
 	machineAssert(rows > 0, "state array cannot have 0 rows");
 	state_transitions.resize(1 + rows);

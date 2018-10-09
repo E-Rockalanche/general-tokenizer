@@ -172,15 +172,15 @@ void setup(Tokenizer& tokenizer) {
 	tokenizer.addRule(Tokenizer::OCTAL_RULE, TokenType::OCTAL);
 	tokenizer.addRule(Tokenizer::BINARY_RULE, TokenType::BINARY);
 
-	tokenizer.addRule(Tokenizer::MALFORMED_HEX_RULE, TokenType::MALFORMED_HEX, false);
-	tokenizer.addRule(Tokenizer::MALFORMED_DECIMAL_RULE, TokenType::MALFORMED_DECIMAL, false);
-	tokenizer.addRule(Tokenizer::MALFORMED_OCTAL_RULE, TokenType::MALFORMED_OCTAL, false);
-	tokenizer.addRule(Tokenizer::MALFORMED_BINARY_RULE, TokenType::MALFORMED_BINARY, false);
+	tokenizer.addRule(Tokenizer::MALFORMED_HEX_RULE, TokenType::MALFORMED_HEX);
+	tokenizer.addRule(Tokenizer::MALFORMED_DECIMAL_RULE, TokenType::MALFORMED_DECIMAL);
+	tokenizer.addRule(Tokenizer::MALFORMED_OCTAL_RULE, TokenType::MALFORMED_OCTAL);
+	tokenizer.addRule(Tokenizer::MALFORMED_BINARY_RULE, TokenType::MALFORMED_BINARY);
 
 	tokenizer.addRule(Tokenizer::DQ_STRING_RULE, TokenType::STRING);
 
 	tokenizer.addRule(Tokenizer::CHARACTER_RULE, TokenType::CHARACTER);
-	tokenizer.addRule(Tokenizer::MALFORMED_CHARACTER_RULE, TokenType::MALFORMED_CHARACTER, false);
+	tokenizer.addRule(Tokenizer::MALFORMED_CHARACTER_RULE, TokenType::MALFORMED_CHARACTER);
 
 	tokenizer.addRule("\\(", TokenType::OPEN_PAREN);
 	tokenizer.addRule(")", TokenType::CLOSE_PAREN);

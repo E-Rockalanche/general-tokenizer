@@ -2,7 +2,7 @@ OBJ=../obj/
 SRC=../src/
 INCLUDE=-I $(SRC)
 CXX=g++
-CFLAGS=-std=c++11 -c
+CFLAGS=-Wall -Wextra -std=c++11 -c
 LFLAGS=-static
 MAKE_OBJ=$(CXX) $(CFLAGS) $(INCLUDE) $< -o $@
 MAKE_EXE=$(CXX) $(LFLAGS) $^ -o $@

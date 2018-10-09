@@ -1,3 +1,16 @@
+/*
+made by Eric Roberts, 2018
+
+Token state machine creates a finite state machine from a set of rules in the
+form of simple regular expressions. The state changes are encoded in a table
+(vector<map<char, State>>). An iterator is used to traverse the table. When the
+iterator hits state 0 an undefined state change has occured, which means
+whatever type the iterator contains is the type of token that was parsed before
+the last character (a type less than 0 denotes an invalid token). Once state 0
+is hit the last character that was parsed should be put back into the stream
+from which it was read
+*/
+
 #ifndef TOKEN_STATE_MACHINE_HPP
 #define TOKEN_STATE_MACHINE_HPP
 
@@ -27,7 +40,6 @@ public:
 	};
 
 	TokenStateMachine();
-	TokenStateMachine(uint num_expressions, const std::string* expressions);
 	TokenStateMachine(uint rows, const std::map<char, uint>* state_changes, const int* types);
 	void addRule(std::string simple_regex, int type);
 	Iterator begin();

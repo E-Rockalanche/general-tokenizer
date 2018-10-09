@@ -16,11 +16,8 @@ const char* Tokenizer::SQ_STRING_RULE = "'((\\\\.)|[^\"\\\\])*'";
 const char* Tokenizer::CHARACTER_RULE = "'(\\\\.)|[^'\\\\]'";
 const char* Tokenizer::MALFORMED_CHARACTER_RULE = "'(\\\\.)|[^'\\\\]((\\\\.)|[^'\\\\])+'";
 
-void Tokenizer::addRule(std::string rule, int token_type, bool valid) {
+void Tokenizer::addRule(std::string rule, int token_type) {
 	state_machine.addRule(rule, token_type);
-	if (!valid) {
-		invalid_types.push_back(token_type);
-	}
 }
 
 void Tokenizer::ignoreType(int token_type) {
@@ -65,15 +62,8 @@ bool Tokenizer::tokenize(std::istream* stream, std::vector<Token>* token_list) {
 		}
 
 		if (!ignore) {
-			if (type == -1) {
+			if (type < 0) {
 				num_errors++;
-			} else {
-				for(uint i = 0; i < invalid_types.size(); i++) {
-					if (invalid_types[i] == type) {
-						num_errors++;
-						break;
-					}
-				}
 			}
 
 			token_list->push_back(Token(type, cur_token, token_row, token_column));
@@ -98,7 +88,8 @@ char Tokenizer::get() {
 	}
 	return c;
 }
-
+/*
 uint Tokenizer::errors() {
 	return num_errors;
 }
+*/

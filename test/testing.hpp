@@ -1,3 +1,22 @@
+/*
+made by Eric Roberts, 2018
+
+mocha/chai-like test suite macros
+
+ex)
+describe("string foobar(int n)", {
+	it("should return true", {
+		string str;
+		expectNoException(str = foobar(7))
+		expectEqual(str.size(), 7)
+	})
+
+	it("should throw error", {
+		expectException(foobar(-1), ExceptionType)
+	})
+})
+*/
+
 #ifndef UNIT_TEST_HPP
 #define UNIT_TEST_HPP
 
@@ -23,7 +42,12 @@ unsigned int TEST_print_depth = 0;
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 #define print(message)\
-std::cout << std::string(TEST_print_depth*2, ' ') << message << '\n'
+std::cout << std::string(TEST_print_depth*2, ' ') << message << '\n';
+
+#define printColour(message, colour)\
+SetConsoleTextAttribute(hConsole, colour);\
+std::cout << std::string(TEST_print_depth*2, ' ') << message << '\n';\
+SetConsoleTextAttribute(hConsole, WHITE);
 
 #define describe(message, code)\
 {\
@@ -64,22 +88,27 @@ std::cout << std::string(TEST_print_depth*2, ' ') << message << '\n'
 	TEST_print_depth--;\
 }
 
-#define expect(actual, expected)\
+#define expect(actual, expected) TEST_expect(actual, ==, "equal", expected)
+#define expectEqual(actual, expected) TEST_expect(actual, ==, "equal", expected)
+#define expectNotEqual(actual, expected) TEST_expect(actual, !=, "not equal", expected)
+#define expectGreaterThan(actual, expected) TEST_expect(actual, >, "greater than", expected)
+#define expectGreaterThanOrEqual(actual, expected) TEST_expect(actual, >=, "greater than or equal", expected)
+#define expectLesserThan(actual, expected) TEST_expect(actual, <, "lesser than", expected)
+#define expectLesserThanOrEqual(actual, expected) TEST_expect(actual, <=, "lesser than or equal", expected)
+
+#define TEST_expect(actual, comparison, comparison_text, expected)\
 {\
 	if (TEST_ok) {\
 		try{\
 			auto TEST_actual = actual;\
-			if (TEST_actual != expected) {\
+			if (!(TEST_actual comparison expected)) {\
 				TEST_ok = false;\
-				SetConsoleTextAttribute(hConsole, RED);\
-				print("expected " << #actual << " (" << TEST_actual << ") to equal " << expected);\
-				SetConsoleTextAttribute(hConsole, WHITE);\
+				printColour("expected " << #actual << " (" << TEST_actual\
+					<< ") to be " << comparison_text << " to " << expected, RED);\
 			}\
 		} catch (...) {\
 			TEST_ok = false;\
-			SetConsoleTextAttribute(hConsole, RED);\
-			print(#actual << " threw an exception");\
-			SetConsoleTextAttribute(hConsole, WHITE);\
+			printColour(#actual << " threw an exception", RED);\
 		}\
 	}\
 }
@@ -94,9 +123,7 @@ std::cout << std::string(TEST_print_depth*2, ' ') << message << '\n'
 	} catch(...) {}\
 	if (!TEST_correct_exception) {\
 		TEST_ok = false;\
-		SetConsoleTextAttribute(hConsole, RED);\
-		print("expected " << #throwing_code << " to throw " << #exception_type);\
-		SetConsoleTextAttribute(hConsole, WHITE);\
+		printColour("expected " << #throwing_code << " to throw " << #exception_type, RED);\
 	}\
 }
 

@@ -1,3 +1,15 @@
+/*
+made by Eric Roberts, 2018
+
+Tokenizer uses token state machine to encode a set of rules and parse a sequence
+of tokens. Rules are added with addRule() which requires a regex like string and
+a type value. Negative types are considered invalid tokens. Tokens of specific
+types can be excluded from the vector by calling ignoreType(). Each token
+records the raw string parsed, its type, row, and column. Each token is added to
+the vector provided. For each invalid token parsed the number of errors is
+incremented.
+*/
+
 #ifndef TOKENIZER_HPP
 #define TOKENIZER_HPP
 
@@ -13,11 +25,11 @@ typedef unsigned int uint;
 
 class Tokenizer {
 public:
-	void addRule(std::string rule, int token_type, bool valid = true);
+	void addRule(std::string rule, int token_type);
 	void ignoreType(int token_type);
 	bool tokenize(std::istream* stream, std::vector<Token>* token_list);
 	bool tokenize(const std::string& str, std::vector<Token>* token_list);
-	unsigned int errors();
+	unsigned int errors(){ return num_errors; }
 
 	// predefined rules you can use
 	static const char* WHITESPACE; // \s+
@@ -41,7 +53,6 @@ private:
 	std::istream* stream;
 
 	std::vector<int> ignore_types;
-	std::vector<int> invalid_types;
 
 	uint row;
 	uint column;
