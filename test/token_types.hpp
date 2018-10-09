@@ -1,0 +1,44 @@
+#ifndef TOKEN_TYPES_HPP
+#define TOKEN_TYPES_HPP
+
+class TokenType {
+public:
+	enum Type {
+		WORD,
+		LABEL,
+		INSTRUCTION,
+		REGISTER,
+		DIRECTIVE,
+
+		HEX,
+		DECIMAL,
+		OCTAL,
+		BINARY,
+
+		STRING,
+		CHARACTER,
+
+		OPEN_PAREN,
+		CLOSE_PAREN,
+		COMMA,
+		COLON,
+		HASH,
+		EQUALS,
+
+		// ignore types
+		WHITESPACE,
+		COMMENT,
+
+		// invalid types
+		INVALID = -1,
+		MALFORMED_HEX = -2,
+		MALFORMED_DECIMAL = -3,
+		MALFORMED_OCTAL = -4,
+		MALFORMED_BINARY = -5,
+		UNTERMINATED_STRING = -6,
+		UNTERMINATED_CHARACTER = -7,
+		MALFORMED_CHARACTER = -8,
+	};
+};
+
+#endif
